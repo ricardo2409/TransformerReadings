@@ -86,14 +86,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvPotencia3 = (TextView)findViewById(R.id.tvPotencia3);
         tvPotencia4 = (TextView)findViewById(R.id.tvPotencia4);
 
-        tvCalidad = (TextView)findViewById(R.id.tvCalidad);
         tvConsecutivo = (TextView)findViewById(R.id.tvConsecutivo);
         tvContador = (TextView)findViewById(R.id.tvContador);
-        tvControl = (TextView)findViewById(R.id.tvControl);
-        tvTipo = (TextView)findViewById(R.id.tvDispositivo);
         tvRadio = (TextView)findViewById(R.id.tvRadio);
-
-
 
         btnConnect = (Button)findViewById(R.id.btnConectar);
         btnConnect.setOnClickListener(this);
@@ -296,7 +291,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             tvPotencia2.setText("" + intarray[27]);
             tvPotencia3.setText("" + intarray[29]);
             tvPotencia4.setText("" + intarray[31]);
-            tvContador.setText("Contador Watts/Hora: " + intarray[33]);
+            int aux = intarray[36]*256 + intarray[35]*256 + intarray[34]*256 + intarray[33];
+            tvContador.setText("Contador Watts/Hora: " + aux);
         }
     }
 
