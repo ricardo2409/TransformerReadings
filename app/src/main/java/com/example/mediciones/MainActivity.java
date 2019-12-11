@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button btnConnect;
 
     boolean connected = false;
-    String cadena = "F1 00 1C 00 52 23 02 00 00 D6 04 D6 04 D6 04 C4 00 C5 00 C6 00 63 00 63 00 63 00 F4 00 F5 00 F6 00 18 00 00 00 00 00 00 F2";
+    String cadena = "F1 00 1C 00 52 23 02 F4 00 D6 04 D6 04 D6 04 C4 00 C5 00 C6 00 63 00 63 00 63 00 F4 00 F5 00 F6 00 18 00 00 00 00 00 00 F2";
     private static final UUID PORT_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
     public static BluetoothDevice device;
     public static BluetoothSocket socket;
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initItems();
-        //readString(cadena);
+        readString(cadena);
     }
 
     public void initItems(){
@@ -216,17 +216,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }
                             if(control == 0){
                                 uno[0] = sb.toString();
-                                print("Uno: " + uno[0]);
                             }else{
                                 dos[0] = sb.toString();
-                                print("Dos: " + dos[0]);
                                 print("Esto es todo completo: " + uno[0] + dos[0]);
                                 handler.post(new Runnable() {
                                     @Override
                                     public void run() {
                                         //Status
                                         readString(uno[0] + dos[0]); //String final que se lee y analiza
-
                                     }
                                 });
                             }
@@ -293,6 +290,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             tvPotencia4.setText("" + intarray[31]);
             int aux = intarray[36]*256 + intarray[35]*256 + intarray[34]*256 + intarray[33];
             tvContador.setText("Contador Watts/Hora: " + aux);
+            print("Esto es el binary" + Integer.toBinaryString(intarray[7]));
         }
     }
 
