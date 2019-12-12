@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button btnConnect;
 
     boolean connected = false;
-    String cadena = "F1 00 1C 00 52 23 02 F4 00 D6 04 D6 04 D6 04 C4 00 C5 00 C6 00 63 00 63 00 63 00 F4 00 F5 00 F6 00 18 00 00 00 00 00 00 F2";
+    String cadena = "F1 00 1C 00 52 23 02 2A 00 D6 04 D6 04 D6 04 C4 00 C5 00 C6 00 63 00 63 00 63 00 F4 00 F5 00 F6 00 18 00 00 00 00 00 00 F2";
     private static final UUID PORT_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
     public static BluetoothDevice device;
     public static BluetoothSocket socket;
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initItems();
-        readString(cadena);
+        //readString(cadena);
     }
 
     public void initItems(){
@@ -167,10 +168,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         outputStream = socket.getOutputStream();
         inputStream = socket.getInputStream();
         beginListenForData();
-
-        //waitMs(5000);
-        //closeSocket();
-
     }
 
     public void desconectarBluetooth() throws IOException{
@@ -290,7 +287,76 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             tvPotencia4.setText("" + intarray[31]);
             int aux = intarray[36]*256 + intarray[35]*256 + intarray[34]*256 + intarray[33];
             tvContador.setText("Contador Watts/Hora: " + aux);
-            print("Esto es el binary" + Integer.toBinaryString(intarray[7]));
+            print("Esto es el binary: " + Integer.toBinaryString(intarray[7]));
+            String binario = Integer.toBinaryString(intarray[7]);
+            for(int a=binario.length(); a < 6; a++){
+                binario = '0' + binario;
+
+            }
+            print("Esto tiene el nuevo numero: " + binario);
+            for (int cont=0; cont < binario.length(); cont++){
+                System.out.println("Char " + cont + " is " + binario.charAt(cont));
+                if(binario.charAt(cont) == '1'){
+                    // Poner alarmas
+                    switch(cont) {
+                        case 5:
+                            print("Alarma 0");
+                            tvVoltaje2.setTextColor(Color.RED);
+                            break;
+                        case 4:
+                            print("Alarma 1");
+                            tvVoltaje3.setTextColor(Color.RED);
+                            break;
+                        case 3:
+                            print("Alarma 2");
+                            tvVoltaje4.setTextColor(Color.RED);
+                            break;
+                        case 2:
+                            print("Alarma 3");
+                            tvPotencia2.setTextColor(Color.RED);
+                            break;
+                        case 1:
+                            print("Alarma 4");
+                            tvPotencia3.setTextColor(Color.RED);
+                            break;
+                        case 0:
+                            print("Alarma 5");
+                            tvPotencia4.setTextColor(Color.RED);
+                            break;
+                        default:
+                            print("Alarma Ninguna anteriores");
+                    }
+                }else{// Quitar alarmas
+                    switch(cont) {
+                        case 5:
+                            print("Normal 0");
+                            tvVoltaje2.setTextColor(Color.BLACK);
+                            break;
+                        case 4:
+                            print("Normal 1");
+                            tvVoltaje3.setTextColor(Color.BLACK);
+                            break;
+                        case 3:
+                            print("Normal 2");
+                            tvVoltaje4.setTextColor(Color.BLACK);
+                            break;
+                        case 2:
+                            print("Normal 3");
+                            tvPotencia2.setTextColor(Color.BLACK);
+                            break;
+                        case 1:
+                            print("Normal 4");
+                            tvPotencia3.setTextColor(Color.BLACK);
+                            break;
+                        case 0:
+                            print("Normal 5");
+                            tvPotencia4.setTextColor(Color.BLACK);
+                            break;
+                        default:
+                            print("Normal Ninguna anteriores");
+                    }
+                }
+            }
         }
     }
 
@@ -310,6 +376,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvConsecutivo.setText("# Consecutivo: ");
         tvContador.setText("Contador Watts/Hora: ");
         tvRadio.setText("Radio: ");
+    }
+
+    public void redTextViews(){
+        tvPotencia2.setTextColor(Color.RED);
+        tvPotencia3.setTextColor(Color.RED);
+        tvPotencia4.setTextColor(Color.RED);
+        tvVoltaje2.setTextColor(Color.RED);
+        tvVoltaje3.setTextColor(Color.RED);
+        tvVoltaje4.setTextColor(Color.RED);
+    }
+    public void blackTextViews(){
+        tvPotencia2.setTextColor(Color.BLACK);
+        tvPotencia3.setTextColor(Color.BLACK);
+        tvPotencia4.setTextColor(Color.BLACK);
+        tvVoltaje2.setTextColor(Color.BLACK);
+        tvVoltaje3.setTextColor(Color.BLACK);
+        tvVoltaje4.setTextColor(Color.BLACK);
     }
 
     public void onClick(View view) {
