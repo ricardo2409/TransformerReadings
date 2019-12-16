@@ -25,41 +25,42 @@
             android:textStyle="bold"
             android:gravity="center"
             />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text=" A "
-            android:layout_margin="1dp"
             android:layout_column="0"
+            android:layout_margin="1dp"
             android:background="#FFFFFF"
-            android:textStyle="bold"
             android:gravity="center"
-            />
+            android:text=" A "
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="34sp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text=" B "
-            android:layout_margin="1dp"
             android:layout_column="1"
+            android:layout_margin="1dp"
             android:background="#FFFFFF"
             android:gravity="center"
-            android:textStyle="bold"
-            />
+            android:text=" B "
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="34sp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text=" C "
+            android:layout_column="2"
             android:layout_margin="1dp"
             android:background="#FFFFFF"
             android:gravity="center"
-            android:textStyle="bold"
-            android:layout_column="2"
-            />
+            android:text=" C "
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="34sp"
+            android:textStyle="bold" />
 
     </TableRow>
 
@@ -80,40 +81,45 @@
             android:background="#FFFFFF"
             android:gravity="center"
             android:text="Voltaje"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="30sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvVoltaje2"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text=""
-            android:layout_margin="1dp"
             android:layout_column="1"
+            android:layout_margin="1dp"
             android:background="#FFFFFF"
             android:gravity="center"
-            />
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvVoltaje3"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text=""
+            android:layout_column="2"
             android:layout_margin="1dp"
             android:background="#FFFFFF"
             android:gravity="center"
-            android:layout_column="2" />
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/tvVoltaje4"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text=""
+            android:layout_column="2"
             android:layout_margin="1dp"
             android:background="#FFFFFF"
             android:gravity="center"
-            android:layout_column="2" />
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold" />
     </TableRow>
 
 
@@ -135,19 +141,21 @@
             android:background="#FFFFFF"
             android:gravity="center"
             android:text="Corriente"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="30sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvCorriente2"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text=""
-            android:layout_margin="1dp"
             android:layout_column="1"
+            android:layout_margin="1dp"
             android:background="#FFFFFF"
             android:gravity="center"
-            />
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvCorriente3"
@@ -157,17 +165,20 @@
             android:layout_margin="1dp"
             android:background="#FFFFFF"
             android:gravity="center"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/tvCorriente4"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text=""
+            android:layout_column="2"
             android:layout_margin="1dp"
             android:background="#FFFFFF"
             android:gravity="center"
-            android:layout_column="2" />
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold" />
     </TableRow>
 
     <TableRow
@@ -187,40 +198,45 @@
             android:background="#FFFFFF"
             android:gravity="center"
             android:text="Factor de Potencia"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="30sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvFactor2"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text=""
-            android:layout_margin="1dp"
             android:layout_column="1"
+            android:layout_margin="1dp"
             android:background="#FFFFFF"
             android:gravity="center"
-            />
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvFactor3"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text=""
+            android:layout_column="2"
             android:layout_margin="1dp"
             android:background="#FFFFFF"
             android:gravity="center"
-            android:layout_column="2" />
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/tvFactor4"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text=""
+            android:layout_column="2"
             android:layout_margin="1dp"
             android:background="#FFFFFF"
             android:gravity="center"
-            android:layout_column="2" />
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold" />
     </TableRow>
     <TableRow
         android:background="#000000"
@@ -239,40 +255,45 @@
             android:background="#FFFFFF"
             android:gravity="center"
             android:text="Potencia"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="30sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvPotencia2"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text=""
-            android:layout_margin="1dp"
             android:layout_column="1"
+            android:layout_margin="1dp"
             android:background="#FFFFFF"
             android:gravity="center"
-            />
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvPotencia3"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text=""
+            android:layout_column="2"
             android:layout_margin="1dp"
             android:background="#FFFFFF"
             android:gravity="center"
-            android:layout_column="2" />
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/tvPotencia4"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text=""
+            android:layout_column="2"
             android:layout_margin="1dp"
             android:background="#FFFFFF"
             android:gravity="center"
-            android:layout_column="2" />
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold" />
     </TableRow>
 
    <LinearLayout android:layout_width="match_parent"
@@ -293,7 +314,8 @@
                android:background="#FFFFFF"
                android:gravity="left"
                android:text="# Consecutivo: "
-               android:textAppearance="?android:attr/textAppearanceLarge" />
+               android:textAppearance="?android:attr/textAppearanceLarge"
+               android:textSize="26sp" />
 
            <TextView
                android:id="@+id/tvContador"
@@ -304,7 +326,8 @@
                android:background="#FFFFFF"
                android:gravity="left"
                android:text="Contador Watts/Hora: "
-               android:textAppearance="?android:attr/textAppearanceLarge" />
+               android:textAppearance="?android:attr/textAppearanceLarge"
+               android:textSize="26sp" />
 
            <TextView
                android:id="@+id/tvRadio"
@@ -315,7 +338,8 @@
                android:background="#FFFFFF"
                android:gravity="left"
                android:text="Radio: "
-               android:textAppearance="?android:attr/textAppearanceLarge" />
+               android:textAppearance="?android:attr/textAppearanceLarge"
+               android:textSize="26sp" />
 
        </LinearLayout>
 
