@@ -30,7 +30,7 @@ import static java.lang.Long.valueOf;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    TextView tvRadio, tvVoltaje1, tvVoltaje2, tvVoltaje3, tvVoltaje4, tvCorriente1, tvCorriente2, tvCorriente3, tvCorriente4, tvFactor1, tvFactor2, tvFactor3, tvFactor4, tvPotencia1, tvPotencia2, tvPotencia3, tvPotencia4, tvControl, tvConsecutivo, tvTipo, tvContador, tvCalidad;
+    TextView tvRadio, tvTemperatura, tvVoltaje2, tvVoltaje3, tvVoltaje4, tvCorriente1, tvCorriente2, tvCorriente3, tvCorriente4, tvFactor1, tvFactor2, tvFactor3, tvFactor4, tvPotencia1, tvPotencia2, tvPotencia3, tvPotencia4, tvControl, tvConsecutivo, tvTipo, tvContador, tvCalidad;
     Button btnConnect;
 
     boolean connected = false;
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initItems();
-        readString(cadena);
+        //readString(cadena);
     }
 
     public void initItems(){
@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvConsecutivo = (TextView)findViewById(R.id.tvConsecutivo);
         tvContador = (TextView)findViewById(R.id.tvContador);
         tvRadio = (TextView)findViewById(R.id.tvRadio);
+        tvTemperatura = (TextView)findViewById(R.id.tvTemperatura);
 
         btnConnect = (Button)findViewById(R.id.btnConectar);
         btnConnect.setOnClickListener(this);
@@ -226,17 +227,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }
                             System.out.println("Hex as string: " + sb.toString()); //Hex as string
                             if(sb.toString().contains("F1") && !sb.toString().contains("F2")){
-                                print("Tiene F1 pero no F2");
+                                //print("Tiene F1 pero no F2");
                                 control = 1;
                             }else if(!sb.toString().contains("F1") && sb.toString().contains("F2")){
-                                print("Tiene F2 pero no F1");
+                                //print("Tiene F2 pero no F1");
                                 control = 0;
                                 boolDos = true;
                                 //print(uno + dos);
 
                             }else if(sb.toString().contains("F1") && sb.toString().contains("F2")){
                                 //Mandarlo asi como está
-                                print("Ya estaba completo: " + sb.toString());
+                                //print("Ya estaba completo: " + sb.toString());
                             }
 
                         }
@@ -285,13 +286,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             tvPotencia2.setText("" + intarray[27]);
             tvPotencia3.setText("" + intarray[29]);
             tvPotencia4.setText("" + intarray[31]);
-            int aux = intarray[36]*256 + intarray[35]*256 + intarray[34]*256 + intarray[33];
-            tvContador.setText("Contador Watts/Hora: " + aux);
+            int aux = intarray[42]*256 + intarray[41]*256 + intarray[40]*256 + intarray[39];
+            print("Esto es aux: " + aux);
+            tvContador.setText("Contador W/Hr: " + aux);
+            tvTemperatura.setText("Temperatura: " + intarray[33]);
+            //Voltaje de bateria es el 37
             print("Esto es el binary: " + Integer.toBinaryString(intarray[7]));
             String binario = Integer.toBinaryString(intarray[7]);
             for(int a=binario.length(); a < 6; a++){
                 binario = '0' + binario;
-
             }
             print("Esto tiene el nuevo numero: " + binario);
             for (int cont=0; cont < binario.length(); cont++){
