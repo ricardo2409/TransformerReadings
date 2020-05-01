@@ -30,11 +30,11 @@ import static java.lang.Long.valueOf;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    TextView tvRadio, tvTemperatura, tvVoltaje2, tvVoltaje3, tvVoltaje4, tvCorriente1, tvCorriente2, tvCorriente3, tvCorriente4, tvFactor1, tvFactor2, tvFactor3, tvFactor4, tvPotencia1, tvPotencia2, tvPotencia3, tvPotencia4, tvControl, tvConsecutivo, tvTipo, tvContador, tvCalidad;
+    TextView tvSenal, tvPaquetes, tvRuido, tvRadio, tvTemperatura, tvVoltaje2, tvVoltaje3, tvVoltaje4, tvCorriente1, tvCorriente2, tvCorriente3, tvCorriente4, tvFactor1, tvFactor2, tvFactor3, tvFactor4, tvPotencia1, tvPotencia2, tvPotencia3, tvPotencia4, tvControl, tvConsecutivo, tvTipo, tvContador, tvCalidad;
     Button btnConnect;
 
     boolean connected = false;
-    String cadena = "F1 00 1C 00 52 23 02 2A 00 D6 04 D6 04 D6 04 C4 00 C5 00 C6 00 63 00 63 00 63 00 F4 00 F5 00 F6 00 18 00 00 00 00 00 00 F2";
+    String cadena = "F1 00 1C 00 09 29 03 30 00 DA 04 DA 04 DA 04 05 00 05 00 05 00 00 00 9D FF 9D FF 00 00 00 00 00 00 19 00 7D 00 0C 00 B4 6C 00 00 64 DA 62 F2";
     private static final UUID PORT_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
     public static BluetoothDevice device;
     public static BluetoothSocket socket;
@@ -91,6 +91,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvContador = (TextView)findViewById(R.id.tvContador);
         tvRadio = (TextView)findViewById(R.id.tvRadio);
         tvTemperatura = (TextView)findViewById(R.id.tvTemperatura);
+
+        tvSenal = (TextView)findViewById(R.id.tvSeñal);
+        tvPaquetes = (TextView)findViewById(R.id.tvPorcentaje);
+        tvRuido = (TextView)findViewById(R.id.tvRuido);
 
         btnConnect = (Button)findViewById(R.id.btnConectar);
         btnConnect.setOnClickListener(this);
@@ -290,6 +294,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             print("Esto es aux: " + aux);
             tvContador.setText("Contador W/Hr: " + aux);
             tvTemperatura.setText("Temperatura: " + intarray[33]);
+            tvSenal.setText("Señal: " + intarray[43]);
+            tvPaquetes.setText("% de Paquetes: " + intarray[44]);
+            tvRuido.setText("Ruido: " + intarray[45]);
+
             //Voltaje de bateria es el 37
             print("Esto es el binary: " + Integer.toBinaryString(intarray[7]));
             String binario = Integer.toBinaryString(intarray[7]);
@@ -379,6 +387,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvConsecutivo.setText("# Consecutivo: ");
         tvContador.setText("Contador Watts/Hora: ");
         tvRadio.setText("Radio: ");
+        tvTemperatura.setText("Temperatura: ");
     }
 
     public void redTextViews(){
