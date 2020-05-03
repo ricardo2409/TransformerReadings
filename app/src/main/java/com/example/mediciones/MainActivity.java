@@ -1,7 +1,10 @@
 package com.example.mediciones;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
+import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -28,10 +31,10 @@ import java.util.UUID;
 import static java.lang.Long.toBinaryString;
 import static java.lang.Long.valueOf;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    TextView tvSenal, tvPaquetes, tvRuido, tvRadio, tvTemperatura, tvVoltaje2, tvVoltaje3, tvVoltaje4, tvCorriente1, tvCorriente2, tvCorriente3, tvCorriente4, tvFactor1, tvFactor2, tvFactor3, tvFactor4, tvPotencia1, tvPotencia2, tvPotencia3, tvPotencia4, tvControl, tvConsecutivo, tvTipo, tvContador, tvCalidad;
-    Button btnConnect;
+public class MainActivity extends FragmentActivity implements View.OnClickListener {
+
+    Button btnConnect, btnConfiguracion, btnRadio, btnMediciones;
 
     boolean connected = false;
     String cadena = "F1 00 1C 00 09 29 03 30 00 DA 04 DA 04 DA 04 05 00 05 00 05 00 00 00 9D FF 9D FF 00 00 00 00 00 00 19 00 7D 00 0C 00 B4 6C 00 00 64 DA 62 F2";
@@ -62,42 +65,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String uno, dos;
     Boolean boolDos;
     boolean boolPassword;
+    static MedicionesFragment medFrag;
+    static RadioFragment radioFrag;
+    static ConfiguracionFragment confFrag;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initItems();
         //readString(cadena);
+        initItems();
+        medFrag = new MedicionesFragment();
+        radioFrag = new RadioFragment();
+        confFrag = new ConfiguracionFragment();
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().add(R.id.fragment_container, medFrag).commit();
+
     }
 
     public void initItems(){
-        tvVoltaje2 = (TextView)findViewById(R.id.tvVoltaje2);
-        tvVoltaje3 = (TextView)findViewById(R.id.tvVoltaje3);
-        tvVoltaje4 = (TextView)findViewById(R.id.tvVoltaje4);
-
-        tvCorriente2 = (TextView)findViewById(R.id.tvCorriente2);
-        tvCorriente3 = (TextView)findViewById(R.id.tvCorriente3);
-        tvCorriente4 = (TextView)findViewById(R.id.tvCorriente4);
-
-        tvFactor2 = (TextView)findViewById(R.id.tvFactor2);
-        tvFactor3 = (TextView)findViewById(R.id.tvFactor3);
-        tvFactor4 = (TextView)findViewById(R.id.tvFactor4);
-
-        tvPotencia2 = (TextView)findViewById(R.id.tvPotencia2);
-        tvPotencia3 = (TextView)findViewById(R.id.tvPotencia3);
-        tvPotencia4 = (TextView)findViewById(R.id.tvPotencia4);
-
-        tvConsecutivo = (TextView)findViewById(R.id.tvConsecutivo);
-        tvContador = (TextView)findViewById(R.id.tvContador);
-        tvRadio = (TextView)findViewById(R.id.tvRadio);
-        tvTemperatura = (TextView)findViewById(R.id.tvTemperatura);
-
-        tvSenal = (TextView)findViewById(R.id.tvSeñal);
-        tvPaquetes = (TextView)findViewById(R.id.tvPorcentaje);
-        tvRuido = (TextView)findViewById(R.id.tvRuido);
-
         btnConnect = (Button)findViewById(R.id.btnConectar);
         btnConnect.setOnClickListener(this);
+        btnConfiguracion = (Button)findViewById(R.id.btnConfiguracion);
+        btnConfiguracion.setOnClickListener(this);
+        btnRadio = (Button)findViewById(R.id.btnRadio);
+        btnRadio.setOnClickListener(this);
+        btnMediciones = (Button)findViewById(R.id.btnVoltaje);
+        btnMediciones.setOnClickListener(this);
     }
 
     public void print(String message){
@@ -206,11 +200,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         //waitMs(1000);
                         final int byteCount = inputStream.available();
                         if(byteCount > 0) {
-
-
                             byte[] packetBytes = new byte[byteCount];
                             inputStream.read(packetBytes);
-
                             sb = new StringBuilder();
                             for (byte b : packetBytes) {
                                 sb.append(String.format("%02X ", b));
@@ -238,14 +229,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 control = 0;
                                 boolDos = true;
                                 //print(uno + dos);
-
                             }else if(sb.toString().contains("F1") && sb.toString().contains("F2")){
                                 //Mandarlo asi como está
                                 //print("Ya estaba completo: " + sb.toString());
                             }
-
                         }
-
                     }
                     catch (IOException ex) {
                         stopThread = true;
@@ -258,7 +246,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     public void readString(String message){
         String [] arrOfStr = message.split(" ");
-
         Integer[] intarray=new Integer[arrOfStr.length];
         int i=0;
         for (String str : arrOfStr){
@@ -267,37 +254,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             print("Esto es lo que convierto: " + i + " " + temp1);
             i++;
         }
-
         if(Arrays.asList(arrOfStr).contains("F0")){
             print("Si tiene F0");
             //convertString(arrOfStr);
-
         }else{
             print("No tiene F0");
-            tvRadio.setText("Radio: " + intarray[1] + "" + intarray[2]);
+            medFrag.tvRadio.setText("Radio: " + intarray[1] + "" + intarray[2]);
             //tvControl.setText("Control: " + intarray[3]);
-            tvConsecutivo.setText("# Consecutivo: " + intarray[4]);
+            medFrag.tvConsecutivo.setText("# Consecutivo: " + intarray[4]);
             //tvTipo.setText("Dispositivo: " + intarray[6]); /////
-            tvVoltaje2.setText(String.valueOf(Double.valueOf(intarray[10]*256 + intarray[9])/10));
-            tvVoltaje3.setText(String.valueOf(Double.valueOf(intarray[12]*256 + intarray[11])/10));
-            tvVoltaje4.setText(String.valueOf(Double.valueOf(intarray[14]*256 + intarray[13])/10));
-            tvCorriente2.setText(String.valueOf(Double.valueOf(intarray[16]*256 + intarray[15])/100));
-            tvCorriente3.setText(String.valueOf(Double.valueOf(intarray[18]*256 + intarray[17])/100));
-            tvCorriente4.setText(String.valueOf(Double.valueOf(intarray[20]*256 + intarray[19])/100));
-            tvFactor2.setText(String.valueOf(Double.valueOf(intarray[22]*256 + intarray[21])/100));
-            tvFactor3.setText(String.valueOf(Double.valueOf(intarray[24]*256 + intarray[23])/100));
-            tvFactor4.setText(String.valueOf(Double.valueOf(intarray[26]*256 + intarray[25])/100));
-            tvPotencia2.setText("" + intarray[27]);
-            tvPotencia3.setText("" + intarray[29]);
-            tvPotencia4.setText("" + intarray[31]);
+            medFrag.tvVoltaje2.setText(String.valueOf(Double.valueOf(intarray[10]*256 + intarray[9])/10));
+            medFrag.tvVoltaje3.setText(String.valueOf(Double.valueOf(intarray[12]*256 + intarray[11])/10));
+            medFrag.tvVoltaje4.setText(String.valueOf(Double.valueOf(intarray[14]*256 + intarray[13])/10));
+            medFrag.tvCorriente2.setText(String.valueOf(Double.valueOf(intarray[16]*256 + intarray[15])/100));
+            medFrag.tvCorriente3.setText(String.valueOf(Double.valueOf(intarray[18]*256 + intarray[17])/100));
+            medFrag.tvCorriente4.setText(String.valueOf(Double.valueOf(intarray[20]*256 + intarray[19])/100));
+            medFrag.tvFactor2.setText(String.valueOf(Double.valueOf(intarray[22]*256 + intarray[21])/100));
+            medFrag.tvFactor3.setText(String.valueOf(Double.valueOf(intarray[24]*256 + intarray[23])/100));
+            medFrag.tvFactor4.setText(String.valueOf(Double.valueOf(intarray[26]*256 + intarray[25])/100));
+            medFrag.tvPotencia2.setText("" + intarray[27]);
+            medFrag.tvPotencia3.setText("" + intarray[29]);
+            medFrag.tvPotencia4.setText("" + intarray[31]);
             int aux = intarray[42]*256 + intarray[41]*256 + intarray[40]*256 + intarray[39];
             print("Esto es aux: " + aux);
-            tvContador.setText("Contador W/Hr: " + aux);
-            tvTemperatura.setText("Temperatura: " + intarray[33]);
-            tvSenal.setText("Señal: " + intarray[43]);
-            tvPaquetes.setText("% de Paquetes: " + intarray[44]);
-            tvRuido.setText("Ruido: " + intarray[45]);
-
+            medFrag.tvContador.setText("Contador W/Hr: " + aux);
+            medFrag.tvTemperatura.setText("Temperatura: " + intarray[33]);
+            medFrag.tvSenal.setText("Señal: " + intarray[43]);
+            medFrag.tvPaquetes.setText("% de Paquetes: " + intarray[44]);
+            medFrag.tvRuido.setText("Ruido: " + intarray[45]);
             //Voltaje de bateria es el 37
             print("Esto es el binary: " + Integer.toBinaryString(intarray[7]));
             String binario = Integer.toBinaryString(intarray[7]);
@@ -312,27 +296,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     switch(cont) {
                         case 5:
                             print("Alarma 0");
-                            tvVoltaje2.setTextColor(Color.RED);
+                            medFrag.tvVoltaje2.setTextColor(Color.RED);
                             break;
                         case 4:
                             print("Alarma 1");
-                            tvVoltaje3.setTextColor(Color.RED);
+                            medFrag.tvVoltaje3.setTextColor(Color.RED);
                             break;
                         case 3:
                             print("Alarma 2");
-                            tvVoltaje4.setTextColor(Color.RED);
+                            medFrag.tvVoltaje4.setTextColor(Color.RED);
                             break;
                         case 2:
                             print("Alarma 3");
-                            tvPotencia2.setTextColor(Color.RED);
+                            medFrag.tvPotencia2.setTextColor(Color.RED);
                             break;
                         case 1:
                             print("Alarma 4");
-                            tvPotencia3.setTextColor(Color.RED);
+                            medFrag.tvPotencia3.setTextColor(Color.RED);
                             break;
                         case 0:
                             print("Alarma 5");
-                            tvPotencia4.setTextColor(Color.RED);
+                            medFrag.tvPotencia4.setTextColor(Color.RED);
                             break;
                         default:
                             print("Alarma Ninguna anteriores");
@@ -341,27 +325,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     switch(cont) {
                         case 5:
                             print("Normal 0");
-                            tvVoltaje2.setTextColor(Color.BLACK);
+                            medFrag.tvVoltaje2.setTextColor(Color.BLACK);
                             break;
                         case 4:
                             print("Normal 1");
-                            tvVoltaje3.setTextColor(Color.BLACK);
+                            medFrag.tvVoltaje3.setTextColor(Color.BLACK);
                             break;
                         case 3:
                             print("Normal 2");
-                            tvVoltaje4.setTextColor(Color.BLACK);
+                            medFrag.tvVoltaje4.setTextColor(Color.BLACK);
                             break;
                         case 2:
                             print("Normal 3");
-                            tvPotencia2.setTextColor(Color.BLACK);
+                            medFrag.tvPotencia2.setTextColor(Color.BLACK);
                             break;
                         case 1:
                             print("Normal 4");
-                            tvPotencia3.setTextColor(Color.BLACK);
+                            medFrag.tvPotencia3.setTextColor(Color.BLACK);
                             break;
                         case 0:
                             print("Normal 5");
-                            tvPotencia4.setTextColor(Color.BLACK);
+                            medFrag.tvPotencia4.setTextColor(Color.BLACK);
                             break;
                         default:
                             print("Normal Ninguna anteriores");
@@ -372,39 +356,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void resetFields(){
-        tvVoltaje2.setText("");
-        tvVoltaje3.setText("");
-        tvVoltaje4.setText("");
-        tvCorriente2.setText("");
-        tvCorriente3.setText("");
-        tvCorriente4.setText("");
-        tvFactor2.setText("");
-        tvFactor3.setText("");
-        tvFactor4.setText("");
-        tvPotencia2.setText("");
-        tvPotencia3.setText("");
-        tvPotencia4.setText("");
-        tvConsecutivo.setText("# Consecutivo: ");
-        tvContador.setText("Contador Watts/Hora: ");
-        tvRadio.setText("Radio: ");
-        tvTemperatura.setText("Temperatura: ");
+        medFrag.tvVoltaje2.setText("");
+        medFrag.tvVoltaje3.setText("");
+        medFrag.tvVoltaje4.setText("");
+        medFrag.tvCorriente2.setText("");
+        medFrag.tvCorriente3.setText("");
+        medFrag.tvCorriente4.setText("");
+        medFrag.tvFactor2.setText("");
+        medFrag.tvFactor3.setText("");
+        medFrag.tvFactor4.setText("");
+        medFrag.tvPotencia2.setText("");
+        medFrag.tvPotencia3.setText("");
+        medFrag.tvPotencia4.setText("");
+        medFrag.tvConsecutivo.setText("# Consecutivo: ");
+        medFrag.tvContador.setText("Contador Watts/Hora: ");
+        medFrag.tvRadio.setText("Radio: ");
+        medFrag.tvTemperatura.setText("Temperatura: ");
     }
 
     public void redTextViews(){
-        tvPotencia2.setTextColor(Color.RED);
-        tvPotencia3.setTextColor(Color.RED);
-        tvPotencia4.setTextColor(Color.RED);
-        tvVoltaje2.setTextColor(Color.RED);
-        tvVoltaje3.setTextColor(Color.RED);
-        tvVoltaje4.setTextColor(Color.RED);
+        medFrag.tvPotencia2.setTextColor(Color.RED);
+        medFrag.tvPotencia3.setTextColor(Color.RED);
+        medFrag.tvPotencia4.setTextColor(Color.RED);
+        medFrag.tvVoltaje2.setTextColor(Color.RED);
+        medFrag.tvVoltaje3.setTextColor(Color.RED);
+        medFrag.tvVoltaje4.setTextColor(Color.RED);
     }
     public void blackTextViews(){
-        tvPotencia2.setTextColor(Color.BLACK);
-        tvPotencia3.setTextColor(Color.BLACK);
-        tvPotencia4.setTextColor(Color.BLACK);
-        tvVoltaje2.setTextColor(Color.BLACK);
-        tvVoltaje3.setTextColor(Color.BLACK);
-        tvVoltaje4.setTextColor(Color.BLACK);
+        medFrag. tvPotencia2.setTextColor(Color.BLACK);
+        medFrag.tvPotencia3.setTextColor(Color.BLACK);
+        medFrag.tvPotencia4.setTextColor(Color.BLACK);
+        medFrag.tvVoltaje2.setTextColor(Color.BLACK);
+        medFrag.tvVoltaje3.setTextColor(Color.BLACK);
+        medFrag.tvVoltaje4.setTextColor(Color.BLACK);
     }
 
     public void onClick(View view) {
@@ -421,6 +405,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }
                 break;
+
+
+            case R.id.btnConfiguracion:
+                if (!connected) {
+                    print("Estoy en conf");
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.fragment_container, confFrag).commit();
+
+                } else {
+                    showToast("Bluetooth Desconectado");
+                }
+                break;
+            case R.id.btnRadio:
+                if (!connected) {
+                    print("Estoy en Radio");
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.fragment_container, radioFrag).commit();
+                } else {
+                    showToast("Bluetooth Desconectado");
+                }
+                break;
+
+            case R.id.btnVoltaje:
+                if (!connected) {
+                    print("Estoy en Mediciones");
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.fragment_container, medFrag).commit();
+                } else {
+                    showToast("Bluetooth Desconectado");
+                }
+                break;
+
 
 
         }
