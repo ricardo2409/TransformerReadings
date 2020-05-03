@@ -4,19 +4,25 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
+import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +31,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
@@ -65,6 +72,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     String uno, dos;
     Boolean boolDos;
     boolean boolPassword;
+
+    final static int SOURCE_ADDRESS = 0;
+    final static int DESTINATION_ADDRESS = 1;
+    final static int VOLTAGE_CONTROL_CHECKBOX = 2;
+    final static int MINIMUM_VOLTAGE = 3;
+    final static int MAXIMUM_VOLTAGE = 4;
+    final static int AC_VOLTAGE = 5;
+
+
     static MedicionesFragment medFrag;
     static RadioFragment radioFrag;
     static ConfiguracionFragment confFrag;
@@ -390,6 +406,207 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         medFrag.tvVoltaje3.setTextColor(Color.BLACK);
         medFrag.tvVoltaje4.setTextColor(Color.BLACK);
     }
+    public void editSourceAddress(View view)
+    {
+        System.out.println("Estoy en el editSourceAddress");
+
+        if(connected)
+        {
+            Bundle arguments = new Bundle();
+            arguments.putInt("field", SOURCE_ADDRESS);
+            arguments.putString("inputText", getString(R.string.sourceAddress_label));
+            arguments.putString("inputHint", getString(R.string.sourceAddress_hint));
+            arguments.putInt("inputType", InputType.TYPE_CLASS_NUMBER);
+            arguments.putInt("minValue", 1);
+            arguments.putInt("maxValue", 65535);
+
+            DialogFragment dialog;
+
+            dialog = GenericInputDialog.newInstance(arguments);
+            dialog.show(getFragmentManager(), "generic_input");
+        }
+        else
+        {
+            Toast.makeText(getApplicationContext(), getString(R.string.disconnected_message), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void editDestinationAddress(View view)
+    {
+        System.out.println("Estoy en el editDestinationAddress");
+
+        if(connected)
+        {
+            Bundle arguments = new Bundle();
+            arguments.putInt("field", DESTINATION_ADDRESS);
+            arguments.putString("inputText", getString(R.string.destinationAddress_label));
+            arguments.putString("inputHint", getString(R.string.destinationAddress_hint));
+            arguments.putInt("inputType", InputType.TYPE_CLASS_NUMBER);
+            arguments.putInt("minValue", 1);
+            arguments.putInt("maxValue", 65535);
+
+            DialogFragment dialog;
+
+            dialog = GenericInputDialog.newInstance(arguments);
+            dialog.show(getFragmentManager(), "generic_input");
+        }
+        else
+        {
+            Toast.makeText(getApplicationContext(), getString(R.string.disconnected_message), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void toggleVoltageControl(View view)
+    {
+        if(!connected)
+        {
+            Toast.makeText(getApplicationContext(), getString(R.string.disconnected_message), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void editMinimumVoltage(View view)
+    {
+        if(connected)
+        {
+            Bundle arguments = new Bundle();
+            arguments.putInt("field", MINIMUM_VOLTAGE);
+            arguments.putString("inputText", getString(R.string.minimumVoltage_label));
+            //arguments.putString("inputHint", getString(R.string.destinationAddress_hint));
+            arguments.putInt("inputType", InputType.TYPE_CLASS_NUMBER);
+            arguments.putInt("minValue", 0);
+            arguments.putInt("maxValue", 1000);
+
+            DialogFragment dialog;
+
+            dialog = GenericInputDialog.newInstance(arguments);
+            dialog.show(getFragmentManager(), "generic_input");
+        }
+        else
+        {
+            Toast.makeText(getApplicationContext(), getString(R.string.disconnected_message), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void editMaximumVoltage(View view)
+    {
+        if(connected)
+        {
+            Bundle arguments = new Bundle();
+            arguments.putInt("field", MAXIMUM_VOLTAGE);
+            arguments.putString("inputText", getString(R.string.maximumVoltage_label));
+            //arguments.putString("inputHint", getString(R.string.destinationAddress_hint));
+            arguments.putInt("inputType", InputType.TYPE_CLASS_NUMBER);
+            arguments.putInt("minValue", 0);
+            arguments.putInt("maxValue", 1000);
+
+            DialogFragment dialog;
+
+            dialog = GenericInputDialog.newInstance(arguments);
+            dialog.show(getFragmentManager(), "generic_input");
+        }
+        else
+        {
+            Toast.makeText(getApplicationContext(), getString(R.string.disconnected_message), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void editNivelAC(View view)
+    {
+        if(connected)
+        {
+            Bundle arguments = new Bundle();
+            arguments.putInt("field", AC_VOLTAGE);
+            arguments.putString("inputText", "Nivel AC:");
+            arguments.putInt("inputType", InputType.TYPE_CLASS_NUMBER);
+            arguments.putInt("minValue", 0);
+            arguments.putInt("maxValue", 1000);
+
+            DialogFragment dialog;
+
+            dialog = GenericInputDialog.newInstance(arguments);
+            dialog.show(getFragmentManager(), "generic_input");
+        }
+        else
+        {
+            Toast.makeText(getApplicationContext(), getString(R.string.disconnected_message), Toast.LENGTH_SHORT).show();
+        }
+    }
+    public void programConfiguration()
+    {
+        int newSourceAddress, newDestinationAddress;
+        float newMinimumVoltage, newMaximumVoltage, newNivelAC;
+        String stringToSend;
+        if(connected)
+        {
+            try {
+                if(!confFrag.sourceAddressTextInput.getText().toString().matches("") && !confFrag.destinationAddressTextInput.getText().toString().matches("") && !confFrag.minimumVoltageTextInput.getText().toString().matches("") && !confFrag.maximumVoltageTextInput.getText().toString().matches(""))
+                {
+                    // not null not empty
+                    newSourceAddress = Integer.parseInt(confFrag.sourceAddressTextInput.getText().toString());
+                    newDestinationAddress = Integer.parseInt(confFrag.destinationAddressTextInput.getText().toString());
+                    //newVoltageControl = (conFrag.voltageControlCheckbox.isChecked() ? 1 : 0);
+                    newMinimumVoltage = Float.parseFloat(confFrag.minimumVoltageTextInput.getText().toString());
+                    newMaximumVoltage = Float.parseFloat(confFrag.maximumVoltageTextInput.getText().toString());
+                    newNivelAC = Float.parseFloat(confFrag.nivelACInput.getText().toString());
+
+
+                    stringToSend = String.format(Locale.ENGLISH, "$Config,%04d,%04d,%1.1f,%1.1f,%1.1f,&",
+                            newSourceAddress, newDestinationAddress, newMinimumVoltage, newMaximumVoltage, newNivelAC);
+                    if(socket.isConnected()){
+                        System.out.println("Este es el string que mando: " + stringToSend);
+                        outputStream.write(stringToSend.getBytes());
+                        //waitMs(10);
+                        //Guardar configuración
+                        showToast("Configuración Enviada");
+                    }else{
+                        showToast("Conexión Perdida");
+
+                    }
+
+                }else {
+                    //null or empty
+                    showToast("Favor de llenar todos los datos");
+                }
+            } catch (Exception e)
+            {
+                Toast.makeText(getApplicationContext(), getString(R.string.invalidConfig_message), Toast.LENGTH_SHORT).show();
+            }
+
+        }
+        else
+        {
+            Toast.makeText(getApplicationContext(), getString(R.string.disconnected_message), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    public void updateConfigField(int field, float value)
+    {
+        switch(field)
+        {
+            case SOURCE_ADDRESS:
+                confFrag.sourceAddressTextInput.setText(String.format(Locale.ENGLISH,"%05d", (int)value));
+                break;
+            case DESTINATION_ADDRESS:
+                confFrag.destinationAddressTextInput.setText(String.format(Locale.ENGLISH,"%05d", (int)value));
+                break;
+            case VOLTAGE_CONTROL_CHECKBOX:
+                if((int)value == 0)
+                    confFrag.voltageControlCheckbox.setChecked(false);
+                else
+                    confFrag.voltageControlCheckbox.setChecked(true);
+                break;
+            case MINIMUM_VOLTAGE:
+                confFrag.minimumVoltageTextInput.setText(String.format(Locale.ENGLISH,"%1.1f", value));
+                break;
+            case MAXIMUM_VOLTAGE:
+                confFrag.maximumVoltageTextInput.setText(String.format(Locale.ENGLISH,"%1.1f", value));
+                break;
+            case AC_VOLTAGE:
+                confFrag.nivelACInput.setText(String.format(Locale.ENGLISH,"%1.1f", value));
+                break;
+        }
+    }
 
     public void onClick(View view) {
         switch (view.getId()) {
@@ -441,7 +658,75 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         }
     }
-    private void showToast(final String message) {
+    void sendStop() throws IOException{
+        System.out.println("Estoy en sendStop");
+        String msg = "$Parar&";
+        outputStream.write(msg.getBytes());
+        outputStream.write(msg.getBytes());
+        outputStream.write(msg.getBytes());
+        outputStream.write(msg.getBytes());
+
+    }
+    void sendOpen() throws IOException
+    {
+        System.out.println("Estoy en el Open");
+        String msg = "$Abrir&";
+        outputStream.write(msg.getBytes());
+    }
+    void sendClose() throws IOException
+    {
+        System.out.println("Estoy en el Close");
+        String msg = "$Cerrar&";
+        outputStream.write(msg.getBytes());
+    }
+    void sendPassword(String pass) throws IOException
+    {
+        System.out.println("El control = Pass");
+        //control = "Pass"; PROBABLEMENTE SE USE DESPUES
+        System.out.println("Estoy en el sendPassword");
+        String msg = "$PASS=" + pass + ",& ";
+        System.out.println("Este es el pass que mando " + msg);
+        outputStream.write(msg.getBytes());
+    }
+
+    //Input Dialog para ingresar el password para permitir el cambio a remoto
+    public void showPasswordDialog(final String title, final String message){
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        final EditText edittext = new EditText(getApplicationContext());
+        edittext.setInputType(InputType.TYPE_CLASS_NUMBER);
+        edittext.setTextColor(getResources().getColor(R.color.black));
+        edittext.setRawInputType(Configuration.KEYBOARD_12KEY);
+        alert.setMessage(message);
+        alert.setTitle(title);
+        alert.setView(edittext);
+
+        alert.setPositiveButton("Ingresar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String pass = edittext.getText().toString();
+                //Pasar el pass con este comando = $PASS=12345,& regresa OK si es correcto o error si incorrecto
+
+                try{
+                    sendPassword(pass);
+                }catch(IOException e){
+
+                }
+
+
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Cerrar el input dialog
+                dialog.dismiss();
+
+            }
+        });
+
+        alert.show();
+    }
+
+    public void showToast(final String message) {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {

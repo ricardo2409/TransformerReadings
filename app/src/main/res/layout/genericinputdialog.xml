@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#eeeeee" >
+
+    <TextView android:id="@+id/inputDialogTextLabel"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:padding="5dp"
+        android:gravity="center"
+        android:background="@drawable/gray_box1"
+        android:textSize="32sp" />
+
+    <TextView android:id="@+id/inputDialogTextHint"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:padding="5dp"
+        android:gravity="center"
+        android:background="@drawable/gray_box1"
+        android:textSize="26sp" />
+
+    <EditText android:id="@+id/inputDialogEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:imeOptions="actionDone"
+        android:inputType="none"
+        android:textSize="28sp"
+        android:padding="15dp"
+        android:background="@drawable/white_box1"
+        android:gravity="center"
+        android:ems="10" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/errorTextLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="#ff0000"
+        android:text="@string/invalidInput_label"
+        android:textSize="26sp"
+        android:background="@drawable/gray_box1"
+        android:padding="10dp"
+        android:visibility="gone" >
+
+    </TextView>
+
+</LinearLayout>
