@@ -45,6 +45,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     boolean connected = false;
     String cadena = "F1 00 1C 00 09 29 03 30 00 DA 04 DA 04 DA 04 05 00 05 00 05 00 00 00 9D FF 9D FF 00 00 00 00 00 00 19 00 7D 00 0C 00 B4 6C 00 00 64 DA 62 F2";
+    //String cadena = "F1 00 1C 00 52 23 02 2A 00 D6 04 D6 04 D6 04 C4 00 C5 00  20 00 63 00 63 00 63 00 F4 00 F5 00 F6 00 18 00 00 00 00 00 00 F2";
     private static final UUID PORT_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
     public static BluetoothDevice device;
     public static BluetoothSocket socket;
@@ -88,7 +89,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //readString(cadena);
+
         initItems();
         medFrag = new MedicionesFragment();
         radioFrag = new RadioFragment();
@@ -97,7 +98,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().add(R.id.fragment_container, medFrag).commit();
 
+        //readString(cadena);
+
     }
+
 
     public void initItems(){
         btnConnect = (Button)findViewById(R.id.btnConectar);
@@ -288,16 +292,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             medFrag.tvFactor2.setText(String.valueOf(Double.valueOf(intarray[22]*256 + intarray[21])/100));
             medFrag.tvFactor3.setText(String.valueOf(Double.valueOf(intarray[24]*256 + intarray[23])/100));
             medFrag.tvFactor4.setText(String.valueOf(Double.valueOf(intarray[26]*256 + intarray[25])/100));
-            medFrag.tvPotencia2.setText("" + intarray[27]);
-            medFrag.tvPotencia3.setText("" + intarray[29]);
-            medFrag.tvPotencia4.setText("" + intarray[31]);
+            medFrag.tvPotencia2.setText("" + (intarray[28]*256 + intarray[27]));
+            medFrag.tvPotencia3.setText("" + (intarray[30]*256 + intarray[29]));
+            medFrag.tvPotencia4.setText("" + (intarray[32]*256 + intarray[31]));
             int aux = intarray[42]*256 + intarray[41]*256 + intarray[40]*256 + intarray[39];
             print("Esto es aux: " + aux);
             medFrag.tvContador.setText("Contador W/Hr: " + aux);
             medFrag.tvTemperatura.setText("Temperatura: " + intarray[33]);
-            medFrag.tvSenal.setText("Señal: " + intarray[43]);
-            medFrag.tvPaquetes.setText("% de Paquetes: " + intarray[44]);
-            medFrag.tvRuido.setText("Ruido: " + intarray[45]);
+            int dbmSeñal = (intarray[44]/2) - 158;
+            int dbmRuido = (intarray[45]/2) - 158;
+            medFrag.tvSenal.setText("Señal: " + dbmSeñal + "dB");
+            medFrag.tvPaquetes.setText("% de Paquetes: " + intarray[43]);
+            medFrag.tvRuido.setText("Ruido: " + dbmRuido + "dB");
             //Voltaje de bateria es el 37
             print("Esto es el binary: " + Integer.toBinaryString(intarray[7]));
             String binario = Integer.toBinaryString(intarray[7]);
@@ -625,27 +631,27 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
             case R.id.btnConfiguracion:
-                if (!connected) {
+                if (connected) {
                     print("Estoy en conf");
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.fragment_container, confFrag).commit();
+                    //FragmentManager fragmentManager = getSupportFragmentManager();
+                    //fragmentManager.beginTransaction().replace(R.id.fragment_container, confFrag).commit();
 
                 } else {
                     showToast("Bluetooth Desconectado");
                 }
                 break;
             case R.id.btnRadio:
-                if (!connected) {
+                if (connected) {
                     print("Estoy en Radio");
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.fragment_container, radioFrag).commit();
+                    //FragmentManager fragmentManager = getSupportFragmentManager();
+                    //fragmentManager.beginTransaction().replace(R.id.fragment_container, radioFrag).commit();
                 } else {
                     showToast("Bluetooth Desconectado");
                 }
                 break;
 
             case R.id.btnVoltaje:
-                if (!connected) {
+                if (connected) {
                     print("Estoy en Mediciones");
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     fragmentManager.beginTransaction().replace(R.id.fragment_container, medFrag).commit();

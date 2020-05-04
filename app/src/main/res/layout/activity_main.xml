@@ -42,16 +42,21 @@
                 android:textStyle="normal|bold" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
-                android:orientation="horizontal">
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp">
 
                 <Button
                     android:id="@+id/btnVoltaje"
                     style="@android:style/Widget.Button"
-                    android:layout_width="240dp"
+                    android:layout_width="300dp"
                     android:layout_height="70dp"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
                     android:text="Mediciones"
                     android:textSize="23sp"
                     android:textStyle="normal|bold" />
@@ -64,7 +69,7 @@
                 <Button
                     android:id="@+id/btnConfiguracion"
                     style="@android:style/Widget.Button"
-                    android:layout_width="240dp"
+                    android:layout_width="300dp"
                     android:layout_height="70dp"
                     android:text="Configuración"
                     android:textSize="23sp"
@@ -78,16 +83,11 @@
                 <Button
                     android:id="@+id/btnRadio"
                     style="@android:style/Widget.Button"
-                    android:layout_width="240dp"
+                    android:layout_width="300dp"
                     android:layout_height="70dp"
                     android:text="Radio"
                     android:textSize="23sp"
                     android:textStyle="normal|bold" />
-
-                <Space
-                    android:layout_width="10dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
 
 
             </LinearLayout>

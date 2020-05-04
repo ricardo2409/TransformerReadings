@@ -16,7 +16,8 @@ import com.example.mediciones.R;
 public class MedicionesFragment extends Fragment {
     TextView tvSenal, tvPaquetes, tvRuido, tvRadio, tvTemperatura, tvVoltaje2, tvVoltaje3, tvVoltaje4, tvCorriente1, tvCorriente2, tvCorriente3, tvCorriente4, tvFactor1, tvFactor2, tvFactor3, tvFactor4, tvPotencia1, tvPotencia2, tvPotencia3, tvPotencia4, tvControl, tvConsecutivo, tvTipo, tvContador, tvCalidad;
 
-
+    String cadena  = "F1 00 1C 00 09 29 03 30 00 DA 04 DA 04 DA 04 05 00 05 00 05 00 00 00 9D FF 9D FF 00 00 00 00 00 00 19 00 7D 00 0C 00 B4 6C 00 00 64 DA 62 F2";
+    String cadena2 = "F1 00 1C 00 12 29 03 00 00 C2 04 C2 04 C2 04 DC 02 DB 02 E1 02 00 00 63 00 63 00 7D 03 7C 03 83 03 19 00 7D 00 0C 00 5D 75 00 00 64 EF 65 F2";
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -48,6 +49,12 @@ public class MedicionesFragment extends Fragment {
 
         return view;
 
+    }
+
+    @Override
+    public void onStart() {
+        ((MainActivity)getActivity()).readString(cadena2);
+        super.onStart();
     }
 }
 
